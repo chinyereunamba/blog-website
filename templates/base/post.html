@@ -32,7 +32,7 @@
                     <div class="text">
                         <div class="text-header">
                             <h4 class="category">{{post.category}}</h4>
-                            <a href="#">
+                            <a href="{% url 'post' post.slug %}">
                                 <h1 class="post-title">{{post.title|title}}</h1>
                             </a>
                             <ul class="user-details">
@@ -65,27 +65,7 @@
 
                 </div>
 
-                <div class="prev-next">
-                    <div class="prev">
-                        <span><a href="#"><i class="bx bx-chevron-left"></i></a></span>
-                        <div>
-                            <a href="{{post.get_next}}">
-                                <h5>Previous Post</h5>
-                                <h3>How to read to get high grades</h3>
-                            </a>
-                        </div>
-
-                    </div>
-                    <div class="next">
-                        <span><a href="#"><i class="bx bx-chevron-right"></i></a></span>
-                        <div>
-                            <a href="#">
-                                <h5>Next Post</h5>
-                                <h3>How to read to get high grades</h3>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div class="user">
                     <div class="user-img">
