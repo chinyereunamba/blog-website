@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["mucco.herokuapp.com", '*']
 
 AUTH_USER_MODEL = "base.Account"
 
@@ -155,3 +155,8 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     }
 }
+
+# Heroku settings
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure().
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
