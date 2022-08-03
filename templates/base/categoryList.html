@@ -1,0 +1,117 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} | Categories {% endblock %}</title>
+</head>
+
+<body>
+    {% block nav %}
+    <ul class="navlinks">
+
+        <li><a href="{% url 'home' %}">Home</a></li>
+
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'posts' %}">Posts</a></li>
+        <li><a href="{% url 'category' %}" class="active">Categories</a></li>
+
+        <li><a href="{% url 'contact' %}">Contact us</a></li>
+    </ul>
+    {% endblock nav %}
+    {% block content %}
+    <section class="body blog-list">
+        <div class="main">
+            <div class="content">
+                <div class="blog-post">
+                    {% for post in posts %}
+                    <div class="box">
+                        <a href="{% url 'post' post.slug %}" class="box-link">
+                            <div class="img">
+                                <img src={{post.post_image.url}} alt="">
+                            </div>
+                            <div class="text">
+                                <div class="text-header">
+                                    <div class="sub-detail">
+                                        <h4 class="bold">{{post.category}}</h4>
+                                        <h4>{{post.date_created|date:"F j"}} &boxv; {{post.date_created|date:"Y"}}</h4>
+                                    </div>
+                                    <h2>{{post.title}}</h2>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, numqu...</p>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <div class="profile">
+                                                    <img src="{{post.user.profile_image.url}}" alt="">
+                                                </div>
+                                                <div>
+                                                    {% if post.user.first_name == None %}
+                                                    {{post.user.username}}
+                                                    {% else %}
+                                                    {{post.user.first_name}}
+                                                    {% endif %}
+                                                </div>
+                                            </a>
+                                        </li>&bullet;
+                                        <li><a href="#"><i class="bx bx-time"></i> 2 mths</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <h3>No post found...</h3>
+                    {% endfor %}
+
+                </div>
+                {% if posts.has_other_pages %}
+                <div class="pagination">
+                    <div>
+                
+                        {% if posts.has_previous %}
+                        <span>
+                            <a data-page="{{posts.previous_page_number}}" class="page-link" href="?page={{posts.previous_page_number}}">
+                                <i class="arrow bx bx-chevron-left"></i>
+                            </a>
+                        </span>
+                        {% endif %}
+                
+                        {% for i in posts.paginator.page_range %}
+                        {% if posts.number == i %}
+                        <span class="active">
+                            <a class="nos" href="#">{{i}}</a>
+                        </span>
+                        {% else %}
+                        <span>
+                            <a data-page="{{i}}" class="nos" href="?page={{i}}">{{i}}</a>
+                        </span>
+                        {% endif %}
+                        {% endfor %}
+                
+                        {% if posts.has_next %}
+                        <!-- <span>
+                                            <a data-page="{{posts.paginator.num_pagesr}}" class="nos"
+                                                href="?page={{posts.paginator.num_pages}}">Last</a>
+                                        </span> -->
+                        <span>
+                            <a data-page="{{posts.next_page_number}}" href="?page={{posts.next_page_number}}" class="nos"><i
+                                    class="arrow bx bx-chevron-right"></i></a>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% include 'base/aside.html' %}
+        </div>
+    </section>
+
+    {% endblock %}
+</body>
+
+</html>

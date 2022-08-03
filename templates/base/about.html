@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Website | About Us</title>
+</head>
+
+<body>
+    {% block nav %}
+
+    <ul class="navlinks">
+
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}" class="active">About us</a></li>
+        <li><a href="{% url 'posts' %}">Posts</a></li>
+        <li><a href="{% url 'category' %}">Categories</a></li>
+        <li><a href="{% url 'contact' %}">Contact us</a></li>
+    </ul>
+    {% endblock nav %}
+    {% block content %}
+    <section class="header">
+        <div class="intro">
+            <h1>About us</h1>
+            <p>Know more about us!</p>
+        </div>
+    </section>
+
+    <section class="body">
+        <div class="about">
+            <div class="content">
+                <div class="about-header">
+                    <h2>About Us</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere voluptatibus harum placeat
+                        unde
+                        et. Vitae dignissimos officia cum deleniti. Possimus illo repellat ullam voluptas dolores
+                        temporibus, necessitatibus ratione iure culpa, fugiat molestias quas, totam blanditiis dicta
+                        veritatis praesentium reiciendis ducimus! Numquam soluta iusto, sapiente ducimus quo quidem
+                        rem
+                        totam laudantium commodi nisi architecto vel aperiam ipsum ut eaque quod aliquam temporibus
+                        suscipit enim perspiciatis. Voluptate earum voluptatum necessitatibus nemo optio rerum quae
+                        doloribus, eius libero dolores nobis amet nam quod nesciunt in asperiores nostrum. Quaerat
+                        similique consequuntur debitis assumenda, dolor maxime non, in nobis iure quidem rerum
+                        accusamus? Totam, temporibus?</p>
+                </div>
+                <div class="about-img">
+                    <img src="{% static 'images/img-3.jpg' %}" alt="">
+                </div>
+                <div class="about-header">
+                    <h2>About the blog</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex ut dolorum quam ad? Placeat
+                        laboriosam quas unde. Fuga delectus eum architecto? Quas animi dicta vel porro laborum alias
+                        iure sapiente? Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, ex.</p>
+                </div>
+                <div class="about-header">
+                    <h2>Skills and Experience</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae ut adipisci quod architecto
+                        ea. Ab similique, iusto quas, provident modi repellat delectus est eos debitis beatae sed
+                        tempora obcaecati in.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora, rem?</p>
+                </div>
+
+            </div>
+    </section>
+
+    {% endblock content %}
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+{% load custom_tags %}
+{% block nav %}
+
+<ul class="navlinks">
+
+    <li><a href="{% url 'home' %}">Home</a></li>
+
+    <li><a href="{% url 'about' %}">About us</a></li>
+    <li><a href="{% url 'posts' %}">Posts</a></li>
+    <li><a href="{% url 'category' %}" class="active">Categories</a></li>
+    <li><a href="{% url 'contact' %}">Contact us</a></li>
+</ul>
+{% endblock nav %}
+{% block content %}
+<section class="body blog-list">
+    <div class="main">
+        <div class="content">
+            <div class="blog-post">
+                {% for item in category %}
+                <div class="box">
+                    <a href="{% url 'categoryList' item.slug %}" class="box-link">
+                        <div class="img">
+                            <img src="" alt="">
+                        </div>
+                        <div class="text">
+                            <div class="text-header">
+                                <h2>{{item.category}}</h2>
+                                <div class="sub-detail" style="display: flex; justify-content:start;">
+                                    <h3>{{posts}}</h3>
+                                    <h4>{{item.date_created|date:"F j"}} &boxv; {{item.date_created|date:"Y"}}
+                                    </h4>
+                                </div>
+                                <ul>
+                                    <li style="padding: 0.5rem 0;"><a href="#"><i class="bx bx-time"></i> {{item.date_created|timesince|upto:','}} ago</a>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <h3>No post found...</h3>
+                {% endfor %}
+
+            </div>
+            {% if category.has_other_pages %}
+            <div class="pagination">
+                <div>
+
+                    {% if category.has_previous %}
+                    <span>
+                        <a data-page="{{category.previous_page_number}}" class="page-link"
+                            href="?page={{category.previous_page_number}}">
+                            <i class="arrow bx bx-chevron-left"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+
+                    {% for i in category.paginator.page_range %}
+                    {% if category.number == i %}
+                    <span class="active">
+                        <a class="nos" href="#">{{i}}</a>
+                    </span>
+                    {% else %}
+                    <span>
+                        <a data-page="{{i}}" class="nos" href="?page={{i}}">{{i}}</a>
+                    </span>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if category.has_next %}
+                    <!-- <span>
+                                            <a data-page="{{posts.paginator.num_pagesr}}" class="nos"
+                                                href="?page={{posts.paginator.num_pages}}">Last</a>
+                                        </span> -->
+                    <span>
+                        <a data-page="{{category.next_page_number}}" href="?page={{category.next_page_number}}"
+                            class="nos"><i class="arrow bx bx-chevron-right"></i></a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% include 'base/aside.html' %}
+    </div>
+</section>
+
+
+{% endblock content %}

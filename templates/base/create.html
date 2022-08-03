@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+{% block nav %}
+
+<ul class="navlinks">
+
+    <li><a href="{% url 'home' %}">Home</a></li>
+
+    <li><a href="{% url 'about' %}">About us</a></li>
+    <li><a href="{% url 'posts' %}" class="active">Blog</a></li>
+    <li><a href="{% url 'category' %}">Categories</a></li>
+    <li><a href="{% url 'contact' %}">Contact us</a></li>
+</ul>
+{% endblock %}
+{% block content %}
+<section class="body post-body">
+    <div class="main">
+        <div class="content">
+            <div class="form">
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% for i in form %}
+                    {{i.label}}:
+                    <div class="input">
+
+                        {{i}}
+                    </div>
+                    {% endfor %}
+                    <button type="submit">Save</button>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

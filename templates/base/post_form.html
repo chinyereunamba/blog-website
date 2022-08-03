@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Post{% endblock %}</title>
+</head>
+
+<body>
+    {% block nav %}
+    <ul class="navlinks">
+
+        <li><a href="{% url 'home' %}">Home</a></li>
+
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'posts' %}" class="active">Blog</a></li>
+        <li><a href="{% url 'category' %}">Categories</a></li>
+        <li><a href="{% url 'contact' %}">Contact us</a></li>
+    </ul>
+    {% endblock %}
+    {% block content %}
+    <section class="body blog-list">
+        <div class="main">
+            <div class="content">
+                <div class="contact-title">
+                    <h3>Create Post</h3>
+                </div>
+                <div class="form">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form.media}}
+                        <div class="input">
+                            {{form.title}}
+                        </div>
+                        <div class="textarea">
+                            {{form.intro_text}}
+                        </div>
+                        <div class="input">
+                            {{form.category}}
+                        </div>
+                        <div class="input">
+                            {{form.post_image}}
+                        </div>
+                        <div class="input">
+                            {{form.read_time}}
+                        </div>
+                        <div class="textarea">
+                            {{form.body}}
+                        </div>
+                        <div class="checkbox">
+                            <label for="id_active">
+                                {{form.active}}
+                                {{form.active.label}}
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label for="id_featured">
+                                {{form.featured}}
+                                {{form.featured.label}}
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <h4>Tags</h4>
+                            {{form.tags}}
+                        </div>
+                        <div class="input">
+                            {{form.slug}}
+                        </div>
+                        <div class="input">
+                            <button type="submit">Save Post</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    {% endblock content %}
+</body>
+
+</html>

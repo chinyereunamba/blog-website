@@ -1,0 +1,161 @@
+{% extends 'base/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    {% block content %}
+
+    {% block nav %}
+    <ul class="navlinks">
+
+        <li><a href="{% url 'home' %}" class="active">Home</a></li>
+
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'posts' %}">Posts</a></li>
+        <li><a href="{% url 'category' %}">Categories</a></li>
+
+        <li><a href="{% url 'contact' %}">Contact us</a></li>
+    </ul>
+    {% endblock %}
+
+    <section class="header">
+        <div class="intro">
+            <h1>Welcome to my blog</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi porro maiores optio sint
+                provident, placeat velit hic? Reiciendis, nemo dicta?</p>
+            <a href="{% url 'posts' %}"><button>Discover more</button></a>
+        </div>
+    </section>
+    <section class="body">
+        <div class="s1">
+            <div>
+                <h4>Newsletters</h4>
+                <h2>Want to get updated when we make a post?</h2>
+            </div>
+            <a href="#subscribe"><button>Subscribe!</button></a>
+        </div>
+    </section>
+    <section class="body">
+        <div class="main">
+            <div class="content">
+
+                <div class="blogs">
+                    {% for post in posts %}
+                    <div class="box">
+                        <div class="img">
+                            <img src="{{post.post_image.url}}" alt="">
+                        </div>
+                        <div class="text">
+                            <div class="text-header">
+                                <h4 class="category">{{post.category}}</h4>
+                                <a href="{% url 'post' post.slug %}">
+                                    <h2>{{post.title}}</h2>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a>
+                                            <div class="profile">
+                                                <img src="{{post.user.profile_image.url}}" alt="">
+                                            </div>
+                                            <div>
+                                                {% if post.user.first_name == None %}
+                                                {{post.user.username}}
+                                                {% else %}
+                                                {{post.user.first_name}} {{post.user.last_name}}
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                    </li> &boxv;
+                                    <li><a href="#"><i class="bx bx-calendar"></i>{{post.date_created|date:"F j, Y"}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <p>{{post.intro_text}}</p>
+
+                            <a href="{% url 'post' post.slug %}"><button>Read more</button></a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="button">
+                    <a href="{% url 'posts' %}"><button>View all posts</button></a>
+                </div>
+            </div>
+            <aside>
+                <form action="{% url 'posts' %}">
+                    <div class="search">
+                        <input type="search" name="search" placeholder="Search...">
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+                {% if request.user.is_admin %}
+                <div class="recent-post">
+                    <div class="recent">
+
+                        <a href="{% url 'create_post' %}"><button>Create posts</button></a>
+                    </div>
+
+                    <div class="recent">
+
+                        <a href="{% url 'create_category' %}"><button>Create Categories</button></a>
+                    </div>
+                    <div class="recent">
+
+                        <a href="{% url 'create_tag' %}"><button>Create tags</button></a>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="recent-post">
+                    <h3>Latest posts</h3>
+                    {% for post in recent_post %}
+                    <div class="recent">
+                        <div class="img">
+                            <img src="{{post.post_image.url}}" alt="">
+                        </div>
+                        <a href="{% url 'post' post.slug %}">
+                            <h4>{{post.title}}</h4>
+                            <p><i class="bx bx-calendar"></i> {{post.date_created|date:"F j, Y"}}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="categories">
+                    <h3>Categories</h3>
+                    <div>
+                        <ul>
+                            {% for i in category %}
+                            <li>
+                                <a href="{% url 'categoryList' i.slug %}">
+                                    <span>{{i}}</span>
+                                    <!-- <span>7</span> -->
+                                </a>
+                            </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="tags">
+                    <h3>Tags</h3>
+                    <div>
+                        {% for tag in tags %}
+                        <span><a href="#">#{{tag}}</a></span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    {% endblock %}
+</body>
+
+</html>

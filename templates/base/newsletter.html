@@ -1,0 +1,8 @@
+
+<form id="subscribe" method="POST">
+    {% csrf_token %}
+    <div>
+        {{newsletter.email_address}}
+        <button type="submit">Subscribe</button>
+    </div>
+</form>

@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="body blog-list" style="min-height: 20vh;">
+<div class="main about">
+    <div class="content">
+        <div class="form">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <p class="post-text">Are you sure you want to delete <strong>{{item|title}}</strong>?</p>
+                <div class="input input-detail">
+
+                    <button type="submit" style="background-color: var(--primary-color);">Yes, I'm sure</button>
+                    <button><a style="color: #fff;" href="{% url 'posts' %}">No, take me back</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
