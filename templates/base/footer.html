@@ -1,36 +1,53 @@
 <footer>
-    <div class="footer-social-links">
-        <span><a href="#"><i class="bx bxl-twitter"></i>Twitter</a></span>
-        <span><a href="#"><i class="bx bxl-facebook"></i>Facebook</a></span>
-        <span><a href="#"><i class="bx bxl-youtube"></i>Youtube</a></span>
-    </div>
     <div class="footer-links">
         <div class="contact">
             <h2>Contact us</h2>
-            <div>
-                <span><i class="bx bxs-phone-call"></i>+234 123567890</span>
-                <span><a href="mailto:info@mail.com"><i class="bx bxs-envelope"></i>example@gmail.com</a></span>
-            </div>
-        </div>
-        <div class="home-link">
-            <h2>Links</h2>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'about' %}">About us</a></li>
-                <li><a href="{% url 'posts' %}">Posts</a></li>
-                <li><a href="{% url 'category' %}">Categories</a></li>
-                <li><a href="{% url 'contact' %}">Contact</a></li>
-            </ul>
-        </div>
-        <div class="subscribe">
-            <h2>Newsletters</h2>
-
-            {% include 'base/newsletter.html' %}
-
-        </div>
+      <div>
+        <span><i class="bx bxs-phone-call"></i>+234 123567890</span>
+        <span
+          ><a href="mailto:info@mail.com"
+            ><i class="bx bxs-envelope"></i>example@gmail.com</a
+            ></span
+        >
+      </div>
     </div>
-    <div class="copyright">
-        <p>&copy; 2022 All Rights Reserved. Designed by <a href="https://www.chinyereunamba.com">Chinyere
-                Unamba</a></p>
+    <div class="home-link">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About us</a></li>
+        <li><a href="{% url 'posts' %}">Posts</a></li>
+        <li><a href="{% url 'category' %}">Categories</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+      </ul>
     </div>
+    <div class="subscribe">
+      <h2>Newsletters</h2>
+
+      {% include 'base/newsletter.html' %}
+    </div>
+</div>
+<div class="footer-social-links">
+  <span>
+    <a href="https://twitter.com/esther_unamba" target="_blank">
+      <i class="bx bxl-twitter"></i>
+    </a>
+  </span>
+  <span>
+    <a href="https://linkedin.com/chinyereunamba" target="_blank">
+      <i class="bx bxl-linkedin"></i>
+    </a>
+  </span>
+  <span>
+    <a href="https://github.com/chinyereunamba" target="_blank">
+      <i class="bx bxl-github"></i>
+    </a>
+  </span>
+</div>
+  <div class="copyright">
+    <p>
+      &copy; 2022
+      <a href="https://github.com/chinyereunamba">Chinyere Unamba</a>
+    </p>
+  </div>
 </footer>

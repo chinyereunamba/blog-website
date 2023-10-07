@@ -2,47 +2,51 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mucco {% block title %}{% endblock %}</title>
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'boxicons/css/boxicons.min.css' %}">
-</head>
+    <link
+      rel="shortcut icon"
+      href="{% static 'images/favicon.ico' %}"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'boxicons/css/boxicons.min.css' %}"
+    />
+  </head>
 
-<body>
+  <body>
     <nav>
-        <div class="logo">
-            <div class="img">
-                <img src="{% static 'images/logo.png' %}" alt="logo">
-            </div>
-            <a href="{% url 'home' %}">
-                <h2>Mucco</h2>
-            </a>
+      <div class="logo">
+        <div class="img">
+          <img src="{% static 'images/logo.png' %}" alt="logo" />
         </div>
-        {% block nav %}
+        <a href="{% url 'home' %}">
+          <h2>Mucco</h2>
+        </a>
+      </div>
+      {% block nav %} 
+      {% endblock %} 
+      {% if request.user.is_authenticated %}
+      <ul class="navLinks">
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+      {% endif %}
 
-        {% endblock %}
-
-        <div class="burger">
-            <div class="line-1"></div>
-            <div class="line-2"></div>
-            <div class="line-3"></div>
-        </div>
-
+      <div class="burger">
+        <div class="line-1"></div>
+        <div class="line-2"></div>
+        <div class="line-3"></div>
+      </div>
     </nav>
     <div class="container">
-
-        {% block content %}
-
-        {% endblock %}
-       {% include 'base/footer.html' %}
+      {% block content %} {% endblock %} {% include 'base/footer.html' %}
     </div>
 
     <script src="{% static 'js/main.js' %}"></script>
-</body>
-
+  </body>
 </html>

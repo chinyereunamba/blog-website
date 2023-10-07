@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth import login, authenticate, logout
 
 from .models import *
 from .forms import *
@@ -23,34 +24,51 @@ def home(request):
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
-            return redirect('home')
+            return redirect("home")
 
     context = {
-        'posts': post,
-        'category': category,
-        'tags': tags,
-        'recent_post': recent_post,
-        'newsletter': newsletter
+        "posts": post,
+        "category": category,
+        "tags": tags,
+        "recent_post": recent_post,
+        "newsletter": newsletter,
     }
-    return render(request, 'base/index.html', context)
+    return render(request, "base/index.html", context)
 
 
-@login_required
+def loginView(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+
+    context = {}
+    return render(request, "base/login.html", context)
+
+
+def logoutView(request):
+    logout(request)
+    return redirect("home")
+
+
+@login_required(login_url="/login")
 def createPost(request):
     form = PostForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         user = Post.objects.create(user=request.user)
         form = PostForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('posts')
+            return redirect("posts")
 
-    context = {
-        'form': form
-    }
+    context = {"form": form}
 
-    return render(request, 'base/post_form.html', context)
+    return render(request, "base/post_form.html", context)
 
 
 @login_required
@@ -58,33 +76,29 @@ def updatePost(request, slug):
     model = Post.objects.get(slug=slug)
     form = PostForm(instance=model)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PostForm(request.POST, request.FILES, instance=model)
         if form.is_valid():
             form.save()
 
-        return redirect('post', slug=model.slug)
+        return redirect("post", slug=model.slug)
 
-    context = {
-        'form': form
-    }
+    context = {"form": form}
 
-    return render(request, 'base/post_form.html', context)
+    return render(request, "base/post_form.html", context)
 
 
 @login_required
 def deletePost(request, slug):
     post = Post.objects.get(slug=slug)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         post.delete()
-        return redirect('posts')
+        return redirect("posts")
 
-    context = {
-        'item': post
-    }
+    context = {"item": post}
 
-    return render(request, 'base/delete.html', context)
+    return render(request, "base/delete.html", context)
 
 
 def viewPost(request, slug):
@@ -94,28 +108,28 @@ def viewPost(request, slug):
     form = CommentForm()
     newsletter = NewsletterForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         newsletter = NewsletterForm(request.POST)
         comments = Comment(post=post)
         form = CommentForm(request.POST, instance=comments)
 
         if form.is_valid():
             form.save()
-        return redirect('post', slug=post.slug)
+        return redirect("post", slug=post.slug)
 
         if newsletter.is_valid():
             newsletter.save()
-            return redirect('post', slug=post.slug)
+            return redirect("post", slug=post.slug)
 
     context = {
-        'post': post,
-        'form': form,
-        'comments': comment,
-        'commentCount': commentCount,
-        'newsletter': newsletter,
+        "post": post,
+        "form": form,
+        "comments": comment,
+        "commentCount": commentCount,
+        "newsletter": newsletter,
     }
 
-    return render(request, 'base/post.html', context)
+    return render(request, "base/post.html", context)
 
 
 def posts(request):
@@ -123,20 +137,23 @@ def posts(request):
     category = Category.objects.all()
     tags = Tag.objects.all()
     recent_post = Post.objects.order_by("-date_created")[0:4]
-    query = request.GET.get('search')
+    query = request.GET.get("search")
     newsletter = NewsletterForm()
     if request.method == "POST":
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
 
-            return redirect('posts')
+            return redirect("posts")
 
     if query:
-        posts = posts.filter(Q(title__icontains=query)
-                             | Q(intro_text__icontains=query) | Q(body__icontains=query))
+        posts = posts.filter(
+            Q(title__icontains=query)
+            | Q(intro_text__icontains=query)
+            | Q(body__icontains=query)
+        )
 
-    page = request.GET.get('page')
+    page = request.GET.get("page")
 
     paginator = Paginator(posts, 6)
 
@@ -148,14 +165,14 @@ def posts(request):
         posts = paginator.page(paginator.num_pages)
 
     context = {
-        'posts': posts,
-        'category': category,
-        'tags': tags,
-        'recent_post': recent_post,
-        'newsletter': newsletter,
+        "posts": posts,
+        "category": category,
+        "tags": tags,
+        "recent_post": recent_post,
+        "newsletter": newsletter,
     }
 
-    return render(request, 'base/posts.html', context)
+    return render(request, "base/posts.html", context)
 
 
 def categoryList(request, slug):
@@ -170,24 +187,23 @@ def categoryList(request, slug):
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
-            return redirect('category', slug=slug)
+            return redirect("category", slug=slug)
 
     context = {
-        'posts': posts,
-        'category': category,
-        'tags': tags,
-        'recent_post': recent_post,
-        'newsletter': newsletter,
-        'postCount': postCount,
+        "posts": posts,
+        "category": category,
+        "tags": tags,
+        "recent_post": recent_post,
+        "newsletter": newsletter,
+        "postCount": postCount,
     }
 
-    return render(request, 'base/categoryList.html', context)
+    return render(request, "base/categoryList.html", context)
 
 
 def category(request):
     category = Category.objects.all()
 
-        
     recent_post = Post.objects.order_by("-date_created")[0:4]
     tags = Tag.objects.all()
     newsletter = NewsletterForm()
@@ -195,16 +211,17 @@ def category(request):
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
-        return redirect('category')
+        return redirect("category")
 
     context = {
-        'category': category,
-        'recent_post': recent_post,
-        'tags': tags,
-        'newsletter': newsletter,
+        "category": category,
+        "recent_post": recent_post,
+        "tags": tags,
+        "newsletter": newsletter,
     }
 
-    return render(request, 'base/category.html', context)
+    return render(request, "base/category.html", context)
+
 
 def tags(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
@@ -218,45 +235,44 @@ def tags(request, slug):
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
-            return redirect('category', slug=slug)
+            return redirect("category", slug=slug)
 
     context = {
-        'posts': posts,
-        'category': category,
-        'tags': tags,
-        'tag': tag,
-        'recent_post': recent_post,
-        'newsletter': newsletter,
+        "posts": posts,
+        "category": category,
+        "tags": tags,
+        "tag": tag,
+        "recent_post": recent_post,
+        "newsletter": newsletter,
     }
 
-    return render(request, 'base/tagList.html', context)
-
+    return render(request, "base/tagList.html", context)
 
 
 def contact(request):
     form = ContactForm()
     newsletter = NewsletterForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactForm(request.POST)
-        name = request.POST.get('name')
-        sender_email = request.POST.get('email')
-        subject = request.POST.get('subject')
-        message = request.POST.get('message')
+        name = request.POST.get("name")
+        sender_email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
             newsletter.save()
-            return redirect('contact')
+            return redirect("contact")
         if form.is_valid():
-            print(f'{name} {sender_email} {subject} {message}')
-            return redirect('home')
+            print(f"{name} {sender_email} {subject} {message}")
+            return redirect("home")
 
     context = {
-        'form': form,
-        'newsletter': newsletter,
+        "form": form,
+        "newsletter": newsletter,
     }
 
-    return render(request, 'base/contact.html', context)
+    return render(request, "base/contact.html", context)
 
 
 class CreateTag(SuccessMessageMixin, CreateView, LoginRequiredMixin):
@@ -269,7 +285,7 @@ class CreateTag(SuccessMessageMixin, CreateView, LoginRequiredMixin):
 class CreateCategory(SuccessMessageMixin, CreateView, LoginRequiredMixin):
     model = Category
     form_class = CategoryForm
-    template_name = 'base/create.html'
+    template_name = "base/create.html"
     success_message = "Item %(category)s created successfully"
 
 
@@ -280,12 +296,10 @@ def about(request):
         if newsletter.is_valid():
             newsletter.save()
 
-            return redirect('about')
-    context = {
-        'newsletter': newsletter
-    }
-    return render(request, 'base/about.html', context)
+            return redirect("about")
+    context = {"newsletter": newsletter}
+    return render(request, "base/about.html", context)
 
 
 def thanks(request):
-    return render(request, 'base/thanks.html')
+    return render(request, "base/thanks.html")
