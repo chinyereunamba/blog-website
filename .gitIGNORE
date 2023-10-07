@@ -3,3 +3,10 @@ venv/
 .base/__pycache__
 .base/migrations/__pycache__
 .blog/__pycache__
+__pycache__
+
+.vscode
+.venv
+
+*.sqlite3
+boxicons
