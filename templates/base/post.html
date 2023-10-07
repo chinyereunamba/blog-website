@@ -1,143 +1,162 @@
 {% extends 'base/base.html' %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}| {{post.title}} {% endblock %}</title>
-</head>
+  </head>
 
-<body>
+  <body>
     {% block nav %}
     <ul class="navlinks">
+      <li><a href="{% url 'home' %}">Home</a></li>
 
-        <li><a href="{% url 'home' %}">Home</a></li>
-
-        <li><a href="{% url 'about' %}">About us</a></li>
-        <li><a href="{% url 'posts' %}" class="active">Posts</a></li>
-        <li><a href="{% url 'category' %}">Categories</a></li>
-        <li><a href="{% url 'contact' %}">Contact us</a></li>
+      <li><a href="{% url 'about' %}">About us</a></li>
+      <li><a href="{% url 'posts' %}" class="active">Posts</a></li>
+      <li><a href="{% url 'category' %}">Categories</a></li>
+      <li><a href="{% url 'contact' %}">Contact us</a></li>
     </ul>
-    {% endblock %}
-    {% block content %}
-    <section class="body ">
-        <div class="main post-body">
-            <div class="content post-page">
-                <div class="post">
-                    <div class="img header-img">
-                        <img src="{{post.post_image.url}}" alt="">
-                    </div>
-                    <div class="text">
-                        <div class="text-header">
-                            <h4 class="category">{{post.category}}</h4>
-                            <a href="{% url 'post' post.slug %}">
-                                <h1 class="post-title">{{post.title|title}}</h1>
-                            </a>
-                            <ul class="user-details">
-                                <li><a><i class="bx bx-calendar"></i> {{post.date_created|date:"F j, Y"}}</a>
-                                </li> &boxv;
-                                <li><a><i class="bx bx-book"></i> {{post.read_time}} mins read</a></li>&boxv;
-                                <li><a href="#comments"><i class="bx bx-comment"></i> {{commentCount}} comments</a></li>
-                                {% if user.is_admin %}
-                                &boxv;
-                                <li><a href="{% url 'update_post' post.slug %}"><i class="bx bx-edit"></i> Edit
-                                        Post</a></li>
-                                &boxv;
-                                <li><a href="{% url 'delete_post' post.slug %}"><i class="bx bx-trash"></i> Delete
-                                        Post</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                        <p class="intro-text">{{post.intro_text}}</p>
-
-                        {{post.body|safe}}
-                    </div>
-                </div>
-
-                <div class="post-tags">
-                    <div>
-                        {% for tag in post.tags.all %}
-                        <span><a href="#">#{{tag}}</a></span>
-                        {% endfor %}
-                    </div>
-
-                </div>
-
-                
-
-                <div class="user">
-                    <div class="user-img">
-                        <img src="{{post.user.profile_image.url}}" alt="">
-                    </div>
-                    <div class="about-user">
-                        <a>
-                            <h3>
-                                {% if post.user.first_name and post.user.last_name == None %}
-                                {{post.user.username}}
-                                {% else %}
-                                {{post.user.first_name}} {{post.user.last_name}}
-                                {% endif %}
-                            </h3>
-                        </a>
-                        <p>{{post.user.bio}}</p>
-                        <span class="links">
-                            <a href="#"><i class="bx bxl-twitter"></i></a>
-                            <a href="#"><i class="bx bxl-facebook"></i></a>
-                            <a href="#"><i class="bx bxl-instagram"></i></a>
-                            <a href="#"><i class="bx bxl-youtube"></i></a>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="comments" id="comments">
-                    <h3>{{commentCount}} Comments</h3>
-                    <div>
-
-
-                        {% for comment in comments %}
-                        <div class="user-comment">
-                            <div class="profile">
-                                <img src="{{comment.profile_image.url}}" alt="">
-                            </div>
-                            <div class="comment-content">
-                                <h3>{{comment.name}}</h3>
-                                <p class="date">{{comment.date_created|date:"F j, Y"}} at
-                                    {{comment.date_created|date:"h:s A"}}</p>
-                                <p class="comment">{{comment.comment}}</p>
-                                <span>
-                                    <a href="#"><i class="bx bx-forward"></i>Reply</a>
-                                </span>
-                            </div>
-                        </div>{% endfor %}
-                    </div>
-                </div>
-                <div class="reply">
-                    <h3>Leave a Reply</h3>
-                    <div class="form">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            <div class="input input-detail">
-                                {{form.name}}
-                                {{form.email}}
-
-                            </div>
-                            <div class="textarea">
-                                {{form.comment}}
-                            </div>
-                            <div>
-                                <button type="submit">Post Comment</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    {% endblock %} {% block content %}
+    <section class="body">
+      <div class="main post-body">
+        <div class="content post-page">
+          <div class="post">
+            <div class="img header-img">
+              <img src="{{post.post_image.url}}" alt="" />
             </div>
-        </div>
+            <div class="text">
+              <div class="text-header">
+                <h4 class="category">{{post.category}}</h4>
+                <a href="{% url 'post' post.slug %}">
+                  <h1 class="post-title">{{post.title|title}}</h1>
+                </a>
+                <ul class="user-details">
+                  <li>
+                    <a>
+                      <i class="bx bx-calendar"></i>
+                      {{post.date_created|date:"F j, Y"}}
+                    </a>
+                  </li>
+                  &boxv;
+                  <li>
+                    <a>
+                      <i class="bx bx-book"></i>
+                      {{post.read_time}} mins read
+                    </a>
+                  </li>
+                  &boxv;
+                  <li>
+                    <a href="#comments">
+                      <i class="bx bx-comment"></i>
+                      {{commentCount}} comments
+                    </a>
+                  </li>
+                  {% if user.is_admin %} &boxv;
+                  <li>
+                    <a href="{% url 'update_post' post.slug %}">
+                      <i class="bx bx-edit"></i> Edit Post
+                    </a>
+                  </li>
+                  &boxv;
+                  <li>
+                    <a href="{% url 'delete_post' post.slug %}">
+                      <i class="bx bx-trash"></i> Delete Post
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+              <p class="intro-text">{{post.intro_text}}</p>
+              <div>{{post.body|safe}}</div>
+            </div>
+          </div>
 
+          <div class="post-tags">
+            <div>
+              {% for tag in post.tags.all %}
+              <span><a href="#">#{{tag}}</a></span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="user">
+            <div class="user-img">
+              <img src="{{post.user.profile_image.url}}" alt="" />
+            </div>
+            <div class="about-user">
+              <a>
+                <h3>
+                  {% if post.user.first_name and post.user.last_name == None %}
+                  {{post.user.username}} {% else %} {{post.user.first_name}}
+                  {{post.user.last_name}} {% endif %}
+                </h3>
+              </a>
+              <p>{{post.user.bio}}</p>
+              <span class="links">
+                {% if post.user.twitter %}
+                <a href="{{post.user.twitter}}" target="_blank">
+                  <i class="bx bxl-twitter"></i>
+                </a>
+                {% endif %} {% if post.user.linkedin %}
+                <a href="{{post.user.linkedin}}" target="_blank">
+                  <i class="bx bxl-linkedin"></i>
+                </a>
+                {% endif %} {% if post.user.github %}
+                <a href="{{post.user.github}}" target="_blank">
+                  <i class="bx bxl-github"></i>
+                </a>
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <div class="comments" id="comments">
+            <h3>
+              {{commentCount}} {% if commentCount == 1 %} Comment {% else %}
+              Comments {% endif %}
+            </h3>
+            <div>
+              {% for comment in comments %}
+              <div class="user-comment">
+                <div class="profile">
+                  <img src="{{comment.profile_image.url}}" alt="" />
+                </div>
+                <div class="comment-content">
+                  <h3>{{comment.name}}</h3>
+                  <p class="date">
+                    {{comment.date_created|date:"F j, Y"}} at
+                    {{comment.date_created|date:"h:s A"}}
+                  </p>
+                  <p class="comment">{{comment.comment}}</p>
+                  <span>
+                    <a href="#"><i class="bx bx-forward"></i>Reply</a>
+                  </span>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="reply">
+            <h3>Leave a Reply</h3>
+            <div class="form">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <div class="input input-detail">
+                  {{form.name}} {{form.email}}
+                </div>
+                <div class="textarea">{{form.comment}}</div>
+                <div>
+                  <button type="submit">Post Comment</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     {% endblock %}
-</body>
-
+  </body>
 </html>

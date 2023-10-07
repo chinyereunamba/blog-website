@@ -16,9 +16,9 @@ from ckeditor_uploader.fields import RichTextUploadingField
 class MyAccountManager(BaseUserManager):
     def create_user(self, email, username, password):
         if not email:
-            raise ValueError('Users must have an email address.')
+            raise ValueError("Users must have an email address.")
         if not username:
-            raise ValueError('Users must have a username.')
+            raise ValueError("Users must have a username.")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -31,9 +31,7 @@ class MyAccountManager(BaseUserManager):
 
     def create_superuser(self, email, username, password):
         user = self.create_user(
-            email=self.normalize_email(email),
-            username=username,
-            password=password
+            email=self.normalize_email(email), username=username, password=password
         )
 
         user.is_admin = True
@@ -48,23 +46,31 @@ class MyAccountManager(BaseUserManager):
         return f'user_profile_img/{self.username}/{"profile_pic.png"}'
 
     def get_default_profile_image():
-        return 'profile-img/profile_pic.png'
+        return "profile-img/profile_pic.png"
 
 
 class Account(AbstractBaseUser):
-    email = models.EmailField(verbose_name='email', max_length=60, unique=True)
+    email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
 
     first_name = models.CharField(max_length=60, blank=True, null=True)
     last_name = models.CharField(max_length=60, blank=True, null=True)
 
-    date_joined = models.DateTimeField(
-        verbose_name='date_joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='last_login', auto_now=True)
+    date_joined = models.DateTimeField(verbose_name="date_joined", auto_now_add=True)
+    last_login = models.DateTimeField(verbose_name="last_login", auto_now=True)
 
     bio = models.TextField(max_length=300, blank=True, null=True)
     profile_image = models.ImageField(
-        default="profile-img/profile_pic.png", max_length=255, null=True, blank=True, upload_to="profile-img/")
+        default="profile-img/profile_pic.png",
+        max_length=255,
+        null=True,
+        blank=True,
+        upload_to="profile-img/",
+    )
+
+    linkedin = models.URLField(verbose_name='LinkedIn URL', max_length=250, blank=True)
+    github = models.URLField(verbose_name='GitHub URL', max_length=250, blank=True)
+    twitter = models.URLField(verbose_name='Twitter URL', max_length=250, blank=True)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -75,14 +81,16 @@ class Account(AbstractBaseUser):
 
     objects = MyAccountManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.username
 
     def get_profile_image_filename(self):
-        return str(self.profile_image)[str(self.profile_image).index(f'profile_img/{self.username}/')]
+        return str(self.profile_image)[
+            str(self.profile_image).index(f"profile_img/{self.username}/")
+        ]
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
@@ -92,19 +100,19 @@ class Account(AbstractBaseUser):
 
 
 class Category(models.Model):
-    category = models.CharField(
-        max_length=200, blank=False, null=False, unique=True)
+    category = models.CharField(max_length=200, blank=False, null=False, unique=True)
     slug = models.SlugField(blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["category"]
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.category
 
     def get_absolute_url(self):
-        return reverse('category')
+        return reverse("category")
 
     def save(self, *args, **kwargs):
         if self.slug == None:
@@ -114,7 +122,7 @@ class Category(models.Model):
             count = 1
             while has_slug:
                 count += 1
-                slug = slugify(self.category) + '-' + str(count)
+                slug = slugify(self.category) + "-" + str(count)
                 has_slug = Category.objects.filter(slug=slug).exists()
 
             self.slug = slug
@@ -130,7 +138,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag
 
-
     def save(self, *args, **kwargs):
         if self.slug == None:
             slug = slugify(self.tag)
@@ -139,7 +146,7 @@ class Tag(models.Model):
             count = 1
             while has_slug:
                 count += 1
-                slug = slugify(self.tag) + '-' + str(count)
+                slug = slugify(self.tag) + "-" + str(count)
                 has_slug = Tag.objects.filter(slug=slug).exists()
 
             self.slug = slug
@@ -147,16 +154,16 @@ class Tag(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('posts')
+        return reverse("posts")
 
 
 class Post(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=250, blank=False, null=False)
     intro_text = models.TextField(null=False, blank=False, max_length=300)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, blank=True, null=True)
+        Category, on_delete=models.SET_NULL, blank=True, null=True
+    )
     post_image = models.ImageField(default="img-3.jpg", blank=True, null=True)
     body = RichTextUploadingField(blank=True, null=True)
     read_time = models.IntegerField(default=5)
@@ -164,8 +171,7 @@ class Post(models.Model):
     active = models.BooleanField(default=True)
     tags = models.ManyToManyField(Tag, blank=True)
     slug = models.SlugField(blank=True, null=True)
-    date_created = models.DateTimeField(
-        auto_now_add=True, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -178,7 +184,7 @@ class Post(models.Model):
             count = 1
             while has_slug:
                 count += 1
-                slug = slugify(self.title) + '-' + str(count)
+                slug = slugify(self.title) + "-" + str(count)
                 has_slug = Post.objects.filter(slug=slug).exists()
 
             self.slug = slug
@@ -186,7 +192,7 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]
 
 
 class Comment(models.Model):
@@ -195,8 +201,7 @@ class Comment(models.Model):
     comment = models.TextField(blank=False, null=False)
     profile_image = models.ImageField(default="/profile-img/profile_pic.png")
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(
-        auto_now_add=True, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return f"A new comment on {self.post}"
@@ -205,6 +210,9 @@ class Comment(models.Model):
 class Newsletter(models.Model):
     email_address = models.EmailField(blank=False, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Newsletter Email"
 
     def __str__(self):
         return self.email_address
