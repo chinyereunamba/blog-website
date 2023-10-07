@@ -25,4 +25,8 @@ urlpatterns = [
 
     path('about/', about, name="about"),
     path('newsletters/', thanks, name="thanks"),
+
+    path('login/', loginView, name='login'),
+    path('logout/', logoutView, name='logout'),
+
 ]
