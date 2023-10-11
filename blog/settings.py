@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG")
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -36,6 +36,8 @@ AUTHENTICATION_BACKENDS = (
     "base.backends.CaseInsensitiveModelBackend",
 )
 
+handler404 = "base.views.custom_404"
+handler500 = "base.views.custom_500"
 # Application definition
 
 INSTALLED_APPS = [
@@ -92,7 +94,7 @@ DATABASES = {
     }
 }
 
-# DATABASES['default'] = dj_database_url.config(default=config('DATABASE_URL'))
+DATABASES["default"] = dj_database_url.config(default=config("DATABASE_URL"))
 
 
 # Password validation

@@ -32,31 +32,23 @@ def home(request):
             return redirect("home")
 
     context = {
-        "posts": post,
-        
-    }
-    return render(request, "base/index.html", context)
-
-def aside(request):
-    post = Post.objects.all()[0:3]
-    category = Category.objects.all()
-    tags = Tag.objects.all()
-    recent_post = Post.objects.order_by("-date_created")[0:4]
-    newsletter = NewsletterForm()
-
-
-    context = {
-        "posts": post,
+         "posts": post,
         "category": category,
         "tags": tags,
         "recent_post": recent_post,
         "newsletter": newsletter,
     }
+    return render(request, "base/index.html", context)
 
-    return render(request, 'base/aside.html', context)
+
+def custom_404(request, exception):
+    return render(request, "base/404.html", status=404)
+
+def custom_500(request, exception):
+    return render(request, "base/500.html", status=500)
+
 
 def loginView(request):
-
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -68,7 +60,7 @@ def loginView(request):
             return redirect("home")
 
     context = {}
-    
+
     return render(request, "base/login.html", context)
 
 
@@ -96,7 +88,7 @@ def userSettings(request):
 
 @login_required(login_url="/login")
 def createPost(request):
-    user = Post.objects.create(user=request.user) 
+    user = Post.objects.create(user=request.user)
     form = PostForm(instance=user)
 
     if request.method == "POST":
@@ -326,7 +318,7 @@ class CreateCategory(SuccessMessageMixin, CreateView, LoginRequiredMixin):
     form_class = CategoryForm
     template_name = "base/create.html"
     success_message = "Item %(category)s created successfully"
-    success_url = '/category/'
+    success_url = "/category/"
 
 
 def about(request):

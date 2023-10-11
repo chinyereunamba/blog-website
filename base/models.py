@@ -164,7 +164,7 @@ class Post(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )
-    post_image = models.ImageField(default="img-3.jpg", blank=True, null=True)
+    post_image = models.ImageField(default="img-3.jpg", blank=True, null=True, upload_to='post/')
     body = RichTextUploadingField(blank=True, null=True)
     read_time = models.IntegerField(default=5)
     featured = models.BooleanField(default=False)
