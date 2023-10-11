@@ -1,12 +1,17 @@
-venv/
 .env
 .base/__pycache__
 .base/migrations/__pycache__
 .blog/__pycache__
 __pycache__
-
+*.pyc
 .vscode
 .venv
 
-*.sqlite3
+db.sqlite3
 boxicons
+.vercel
+build.sh
+vercel.json
+.vercelignore
+
+staticfiles_build

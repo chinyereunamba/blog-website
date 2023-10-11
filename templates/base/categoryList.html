@@ -39,7 +39,7 @@
                                 <div class="text-header">
                                     <div class="sub-detail">
                                         <h4 class="bold">{{post.category}}</h4>
-                                        <h4>{{post.date_created|date:"F j"}} &boxv; {{post.date_created|date:"Y"}}</h4>
+                                        <h4>{{post.date_created|date:"F j"}}, {{post.date_created|date:"Y"}}</h4>
                                     </div>
                                     <h2>{{post.title}}</h2>
                                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, numqu...</p>
@@ -58,7 +58,7 @@
                                                 </div>
                                             </a>
                                         </li>&bullet;
-                                        <li><a href="#"><i class="bx bx-time"></i> 2 mths</a></li>
+                                        <li><a href="#"><i class="bx bx-time"></i> {{post.date_created|date:"F j, Y"}}</a></li>
                                     </ul>
                                 </div>
                             </div>

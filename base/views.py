@@ -16,10 +16,15 @@ from .forms import *
 
 def home(request):
     post = Post.objects.filter(featured=True)[0:3]
+
+    if not post:
+        post = Post.objects.all()[0:3]
+
     category = Category.objects.all()
     tags = Tag.objects.all()
     recent_post = Post.objects.order_by("-date_created")[0:4]
     newsletter = NewsletterForm()
+
     if request.method == "POST":
         newsletter = NewsletterForm(request.POST)
         if newsletter.is_valid():
@@ -28,25 +33,42 @@ def home(request):
 
     context = {
         "posts": post,
+        
+    }
+    return render(request, "base/index.html", context)
+
+def aside(request):
+    post = Post.objects.all()[0:3]
+    category = Category.objects.all()
+    tags = Tag.objects.all()
+    recent_post = Post.objects.order_by("-date_created")[0:4]
+    newsletter = NewsletterForm()
+
+
+    context = {
+        "posts": post,
         "category": category,
         "tags": tags,
         "recent_post": recent_post,
         "newsletter": newsletter,
     }
-    return render(request, "base/index.html", context)
 
+    return render(request, 'base/aside.html', context)
 
 def loginView(request):
+
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
 
         user = authenticate(request, email=email, password=password)
+
         if user is not None:
             login(request, user)
             return redirect("home")
 
     context = {}
+    
     return render(request, "base/login.html", context)
 
 
@@ -56,11 +78,28 @@ def logoutView(request):
 
 
 @login_required(login_url="/login")
-def createPost(request):
-    form = PostForm()
+def userSettings(request):
+    user = Account.objects.get(email=request.user.email)
+    form = UserSettingForm(instance=user)
 
     if request.method == "POST":
-        user = Post.objects.create(user=request.user)
+        form = UserSettingForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+
+    context = {"form": form}
+
+    return render(request, "base/create.html", context)
+
+
+@login_required(login_url="/login")
+def createPost(request):
+    user = Post.objects.create(user=request.user) 
+    form = PostForm(instance=user)
+
+    if request.method == "POST":
         form = PostForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
@@ -71,7 +110,7 @@ def createPost(request):
     return render(request, "base/post_form.html", context)
 
 
-@login_required
+@login_required(login_url="/login")
 def updatePost(request, slug):
     model = Post.objects.get(slug=slug)
     form = PostForm(instance=model)
@@ -88,7 +127,7 @@ def updatePost(request, slug):
     return render(request, "base/post_form.html", context)
 
 
-@login_required
+@login_required(login_url="/login")
 def deletePost(request, slug):
     post = Post.objects.get(slug=slug)
 
@@ -287,6 +326,7 @@ class CreateCategory(SuccessMessageMixin, CreateView, LoginRequiredMixin):
     form_class = CategoryForm
     template_name = "base/create.html"
     success_message = "Item %(category)s created successfully"
+    success_url = '/category/'
 
 
 def about(request):

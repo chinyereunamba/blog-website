@@ -87,7 +87,7 @@
             </div>
             <div class="about-user">
               <a>
-                <h3>
+                <h3 style="text-transform: capitalize;">
                   {% if post.user.first_name and post.user.last_name == None %}
                   {{post.user.username}} {% else %} {{post.user.first_name}}
                   {{post.user.last_name}} {% endif %}

@@ -29,4 +29,9 @@ urlpatterns = [
     path('login/', loginView, name='login'),
     path('logout/', logoutView, name='logout'),
 
+
+    path('settings/', userSettings, name='settings'),
+
+
+
 ]

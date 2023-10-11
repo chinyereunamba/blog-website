@@ -54,7 +54,7 @@
                             <img src="{{post.post_image.url}}" alt="">
                         </div>
                         <div class="text">
-                            <div class="text-header">
+                         <div class="text-header">
                                 <h4 class="category">{{post.category}}</h4>
                                 <a href="{% url 'post' post.slug %}">
                                     <h2>{{post.title}}</h2>
@@ -89,69 +89,7 @@
                     <a href="{% url 'posts' %}"><button>View all posts</button></a>
                 </div>
             </div>
-            <aside>
-                <form action="{% url 'posts' %}">
-                    <div class="search">
-                        <input type="search" name="search" placeholder="Search...">
-                        <button type="submit">Search</button>
-                    </div>
-                </form>
-                {% if request.user.is_admin %}
-                <div class="recent-post">
-                    <div class="recent">
-
-                        <a href="{% url 'create_post' %}"><button>Create posts</button></a>
-                    </div>
-
-                    <div class="recent">
-
-                        <a href="{% url 'create_category' %}"><button>Create Categories</button></a>
-                    </div>
-                    <div class="recent">
-
-                        <a href="{% url 'create_tag' %}"><button>Create tags</button></a>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="recent-post">
-                    <h3>Latest posts</h3>
-                    {% for post in recent_post %}
-                    <div class="recent">
-                        <div class="img">
-                            <img src="{{post.post_image.url}}" alt="">
-                        </div>
-                        <a href="{% url 'post' post.slug %}">
-                            <h4>{{post.title}}</h4>
-                            <p><i class="bx bx-calendar"></i> {{post.date_created|date:"F j, Y"}}</p>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="categories">
-                    <h3>Categories</h3>
-                    <div>
-                        <ul>
-                            {% for i in category %}
-                            <li>
-                                <a href="{% url 'categoryList' i.slug %}">
-                                    <span>{{i}}</span>
-                                    <!-- <span>7</span> -->
-                                </a>
-                            </li>
-                            {% endfor %}
-
-                        </ul>
-                    </div>
-                </div>
-                <div class="tags">
-                    <h3>Tags</h3>
-                    <div>
-                        {% for tag in tags %}
-                        <span><a href="#">#{{tag}}</a></span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </aside>
+            {% include 'base/aside.html' %}
         </div>
     </section>
 
