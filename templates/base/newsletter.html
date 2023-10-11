@@ -1,5 +1,5 @@
 
-<form id="subscribe" method="POST">
+<form id="subscribe" method="POST" action="{% url 'subscribe' %}">
     {% csrf_token %}
     <div>
         {{newsletter.email_address}}

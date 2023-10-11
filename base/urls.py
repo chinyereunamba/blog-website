@@ -31,7 +31,7 @@ urlpatterns = [
 
 
     path('settings/', userSettings, name='settings'),
-
-
+    path('subscribe/', subscribe, name='subscribe'),
+    path('thanks/', thanks, name='thanks'),
 
 ]

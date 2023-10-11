@@ -16,3 +16,4 @@ sqlparse==0.4.2
 static3==0.7.0
 toml==0.10.2
 tzdata==2022.1
+whitenoise==6.6.0

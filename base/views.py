@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import login, authenticate, logout
+from django.conf import settings
 
 from .models import *
 from .forms import *
@@ -25,14 +26,9 @@ def home(request):
     recent_post = Post.objects.order_by("-date_created")[0:4]
     newsletter = NewsletterForm()
 
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-            return redirect("home")
-
+    
     context = {
-         "posts": post,
+        "posts": post,
         "category": category,
         "tags": tags,
         "recent_post": recent_post,
@@ -43,6 +39,7 @@ def home(request):
 
 def custom_404(request, exception):
     return render(request, "base/404.html", status=404)
+
 
 def custom_500(request, exception):
     return render(request, "base/500.html", status=500)
@@ -140,7 +137,6 @@ def viewPost(request, slug):
     newsletter = NewsletterForm()
 
     if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
         comments = Comment(post=post)
         form = CommentForm(request.POST, instance=comments)
 
@@ -148,9 +144,6 @@ def viewPost(request, slug):
             form.save()
         return redirect("post", slug=post.slug)
 
-        if newsletter.is_valid():
-            newsletter.save()
-            return redirect("post", slug=post.slug)
 
     context = {
         "post": post,
@@ -163,6 +156,29 @@ def viewPost(request, slug):
     return render(request, "base/post.html", context)
 
 
+def subscribe(request):
+    message = "Good day from Mucco blog. Thank for subscribing to our newsletters"
+    email = request.POST.get("email_address")
+    email_exists = Newsletter.objects.filter(email_address=email).exists()
+    form = NewsletterForm()
+
+    if request.method == "POST":
+        send_mail(
+            "Thank your for subscribing to Our newsletter",
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+        
+        if not email_exists:
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                form.save()
+        
+        return redirect("thanks")
+
+
 def posts(request):
     posts = Post.objects.filter(active=True)
     category = Category.objects.all()
@@ -170,12 +186,6 @@ def posts(request):
     recent_post = Post.objects.order_by("-date_created")[0:4]
     query = request.GET.get("search")
     newsletter = NewsletterForm()
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-
-            return redirect("posts")
 
     if query:
         posts = posts.filter(
@@ -214,11 +224,6 @@ def categoryList(request, slug):
     tags = Tag.objects.all()
     recent_post = Post.objects.order_by("-date_created")[0:4]
     newsletter = NewsletterForm()
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-            return redirect("category", slug=slug)
 
     context = {
         "posts": posts,
@@ -238,11 +243,6 @@ def category(request):
     recent_post = Post.objects.order_by("-date_created")[0:4]
     tags = Tag.objects.all()
     newsletter = NewsletterForm()
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-        return redirect("category")
 
     context = {
         "category": category,
@@ -262,11 +262,6 @@ def tags(request, slug):
     tags = Tag.objects.all()
     recent_post = Post.objects.order_by("-date_created")[0:4]
     newsletter = NewsletterForm()
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-            return redirect("category", slug=slug)
 
     context = {
         "posts": posts,
@@ -291,9 +286,7 @@ def contact(request):
         subject = request.POST.get("subject")
         message = request.POST.get("message")
         newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
-            return redirect("contact")
+
         if form.is_valid():
             print(f"{name} {sender_email} {subject} {message}")
             return redirect("home")
@@ -323,12 +316,7 @@ class CreateCategory(SuccessMessageMixin, CreateView, LoginRequiredMixin):
 
 def about(request):
     newsletter = NewsletterForm()
-    if request.method == "POST":
-        newsletter = NewsletterForm(request.POST)
-        if newsletter.is_valid():
-            newsletter.save()
 
-            return redirect("about")
     context = {"newsletter": newsletter}
     return render(request, "base/about.html", context)
 
